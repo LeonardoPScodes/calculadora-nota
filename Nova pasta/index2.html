@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador de Média</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        nav {
+            background-color: black;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+        }
+        /* Classe para esconder os cards inicialmente */
+        .cards.hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <header>
+            <h1>VERIFICADOR DE MÉDIA</h1>
+            <p></p>
+        </header>
+        <nav>
+            <a>Numero de notas para as medias</a>
+             <ul>
+                <li><a href="index2.html"> 2 notas</a></li>
+                <li><a href="index3.html"> 3 notas </a></li>
+                <li><a href="index4.html"> 4 notas </a></li>                
+                <li><a href="index5.html"> 5 notas </a></li>
+             </ul>
+        </nav>
+        <main>
+            <section>
+                <div id="fbmt">
+                    <h2>Vamos começar</h2>
+                </div>
+            </section>
+            
+            <section id="formulario">
+                <h2>FORMULARIO</h2>
+                <label for="nome">nome:</label>
+                <input type="text" id="nome" placeholder="Insira seu nome">
+                <input type="number" id="nota1" placeholder="nota 1" step="0.5">
+                <input type="number" id="nota2" placeholder="nota 2" step="0.5">
+                <input type="number" id="nota3" placeholder="nota 3" step="0.5">
+                <button onclick="resultado()">enviar</button>
+                <h3 id="resultado_media_aplicado">Resultado:</h3>
+            </section>
+
+            <script>
+                // Calcula a média
+                function media(nota1, nota2){
+                    return (nota1 + nota2 ) / 2;
+                }
+
+                // Saber o resultado do aluno e mostrar o card correspondente
+                function mostrar_tag(resultado_media, nome){
+                    const saida = document.getElementById("resultado_media_aplicado");
+                    
+                    // Seleciona os cards
+                    const cardRuim = document.getElementById("card-ruim");
+                    const cardBoa = document.getElementById("card-boa");
+                    const cardOtima = document.getElementById("card-otima");
+
+                    // Esconde todos os cards antes de exibir o correto
+                    cardRuim.classList.add("hidden");
+                    cardBoa.classList.add("hidden");
+                    cardOtima.classList.add("hidden");
+
+                    if (resultado_media >= 9) {
+                        saida.style.color = "gold";
+                        saida.innerText = nome + ", média " + resultado_media.toFixed(1) + " - ÓTIMO!";
+                        cardOtima.classList.remove("hidden"); // Mostra o card Ótima
+                    } 
+                    else if (resultado_media >= 6) {
+                        saida.style.color = "lightgreen";
+                        saida.innerText = nome + ", média " + resultado_media.toFixed(1) + " - BOM!";
+                        cardBoa.classList.remove("hidden"); // Mostra o card Boa
+                    } 
+                    else {
+                        saida.style.color = "red";
+                        saida.innerText = nome + ", média " + resultado_media.toFixed(1) + " - RUIM!";
+                        cardRuim.classList.remove("hidden"); // Mostra o card Ruim
+                    }
+                }
+
+                // Função do clique do botão da tela
+                async function resultado(){
+                    const nome = document.getElementById("nome").value;
+                    const nota1 = Number(document.getElementById("nota1").value);
+                    const nota2 = Number(document.getElementById("nota2").value);
+                    
+                    const dadosAluno = {nome, nota1, nota2};
+
+                    try {
+                        const resposta = await fetch('http://localhost:8080/api/alunos', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify(dadosAluno)
+                        });
+                        if (resposta.ok) {
+                            console.log("aluno cadastrado com sucesso");
+                        } else {
+                            console.error("Erros ao guardar no banco de dados");
+                        }
+                    } catch (erro) {
+                        console.error("Erro de ligação com o servidor Java", erro);
+                    }
+                    
+                    const resultado_media = media(nota1, nota2);
+                    mostrar_tag(resultado_media, nome);
+                }
+            </script>
+            
+            <div id="cartoes">
+                <!-- Card Ruim (Oculto por padrão) -->
+                <article class="cards hidden" id="card-ruim">
+                    <h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Ruim</h3>
+                    <p class="emojinota">
+                        Nota abaixo de 6. Desempenho insuficiente que indica a necessidade de 
+                        muita revisão, estudo redobrado e mudanças drásticas na estratégia 
+                        para alcançar os resultados esperados.
+                    </p>
+                    <img src="2.png" alt="Ilustração representando desempenho ruim">
+                </article>
+
+                <!-- Card Boa (Oculto por padrão) -->
+                <article class="cards hidden" id="card-boa" 
+                style="">
+                    <h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Boa</h3>
+                    <p class="emojinota">
+                        Nota entre 6 e 9. Desempenho sólido e satisfatório. Demonstra um bom 
+                        domínio do conteúdo ou da atividade, com pequenos detalhes que ainda 
+                        podem ser refinados para atingir a excelência.
+                    </p>
+                    <img src="3.png" alt="Ilustração representando desempenho bom">
+                </article>
+
+                <!-- Card Ótima (Oculto por padrão) -->
+                <article class="cards hidden" id="card-otima">
+                    <h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Ótima</h3>
+                    <p class="emojinota">
+                        Nota entre 9 e 10. Desempenho excepcional e de excelência. Mostra 
+                        compreensão plena, alto nível de qualidade e resultados que superam 
+                        as expectativas.
+                    </p>
+                    <img src="1.png" alt="Ilustração representando desempenho ótimo">
+                </article>
+            </div>
+        </main>
+        <footer>
+            <p>Obrigado por participar!</p>
+        </footer>
+    </div>
+</body>
+</html>
