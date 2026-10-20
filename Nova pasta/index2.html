@@ -37,17 +37,16 @@
         <main>
             <section>
                 <div id="fbmt">
-                    <h2>Vamos começar</h2>
+                    <h2>VAMOS COMEÇAR DIGITE SUAS NOTAS:</h2>
                 </div>
             </section>
             
             <section id="formulario">
                 <h2>FORMULARIO</h2>
-                <label for="nome">nome:</label>
+                <label for="nome"></label>
                 <input type="text" id="nome" placeholder="Insira seu nome">
                 <input type="number" id="nota1" placeholder="nota 1" step="0.5">
                 <input type="number" id="nota2" placeholder="nota 2" step="0.5">
-                <input type="number" id="nota3" placeholder="nota 3" step="0.5">
                 <button onclick="resultado()">enviar</button>
                 <h3 id="resultado_media_aplicado">Resultado:</h3>
             </section>
@@ -87,6 +86,7 @@
                         saida.innerText = nome + ", média " + resultado_media.toFixed(1) + " - RUIM!";
                         cardRuim.classList.remove("hidden"); // Mostra o card Ruim
                     }
+
                 }
 
                 // Função do clique do botão da tela
@@ -132,8 +132,7 @@
                 </article>
 
                 <!-- Card Boa (Oculto por padrão) -->
-                <article class="cards hidden" id="card-boa" 
-                style="">
+                <article class="cards hidden" id="card-boa">
                     <h3 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">Boa</h3>
                     <p class="emojinota">
                         Nota entre 6 e 9. Desempenho sólido e satisfatório. Demonstra um bom 
